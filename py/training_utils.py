@@ -70,7 +70,7 @@ def train(loader, model, criterion, optimizer, epoch, device, args):
         # Measure the elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
-        
+
         # Write the metrics to Tensorboard
         tboard_step = i + (args.train_loader_len * args.current_epoch)
         args.writer.add_scalar('Train/loss', xent.avg, tboard_step)
@@ -138,7 +138,7 @@ def validate(loader, model, criterion, device, args):
             # Measure the elapsed time
             batch_time.update(time.time() - end)
             end = time.time()
-            
+
             # Write the metrics to Tensorboard
             tboard_step = i + (args.validation_loader_len * args.current_epoch)
             args.writer.add_scalar('Dev/loss', xent.avg, tboard_step)
