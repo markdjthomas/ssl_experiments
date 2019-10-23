@@ -1,0 +1,7 @@
+models/*
+notebooks/*
+logs/*
+data/*
+*.pyc
+*.ipynb*
+*__pycache__*

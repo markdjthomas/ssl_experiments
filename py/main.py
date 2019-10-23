@@ -94,10 +94,10 @@ def main():
     transforms = torchvision.transforms.Compose([torchvision.transforms.ToTensor(),
                                                  torchvision.transforms.Normalize((0.1307,), (0.3081,))])
 
-    training_dataset = datasets.MNIST('../data', train=True, download=True, transform=transforms)
+    training_dataset = datasets.CIFAR10('./data', train=True, download=True, transform=transforms)
     training_loader = torch.utils.data.DataLoader(training_dataset, batch_size=args.batch_size, shuffle=True)
 
-    validation_dataset = datasets.MNIST('../data', train=False, transform=transforms)
+    validation_dataset = datasets.CIFAR10('./data', train=False, transform=transforms)
     validation_loader = torch.utils.data.DataLoader(validation_dataset, batch_size=args.batch_size, shuffle=True)
 
     # Save the lengths of the data loaders for Tensorboard
