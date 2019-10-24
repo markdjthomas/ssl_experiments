@@ -17,9 +17,10 @@ import torch.optim
 import torch.utils.data
 import torch.utils.data.distributed
 import torchvision.datasets as datasets
+import torchvision.transforms as transforms
 import torchvision.models as models
 
-from utils.pretraining_utils import train, validate, test_best_metrics, save_checkpoint
+from training_utils import train, validate, test_best_metrics, save_checkpoint
 from torch.utils.tensorboard import SummaryWriter
 
 # Set the global best metrics
@@ -34,7 +35,7 @@ parser.add_argument('--arch', default='resnet50', type=str)
 parser.add_argument('--seed', default=None, type=int)
 parser.add_argument('--classes', default=10, type=int)
 parser.add_argument('--print-freq', default=100, type=int, dest='print_freq')
-parser.add_argument('--num-workers', default=16, type=int, dest='num_workers')
+parser.add_argument('--num-workers', default=24, type=int, dest='num_workers')
 
 # Learning arguments
 parser.add_argument('--epochs', default=100, type=int)
@@ -91,13 +92,18 @@ def main():
     print('=> creating the datasets and iterators')
 
     # Create the training dataset and loader
-    transforms = torchvision.transforms.Compose([torchvision.transforms.ToTensor(),
-                                                 torchvision.transforms.Normalize((0.1307,), (0.3081,))])
+    training_transform = transforms.Compose([transforms.RandomCrop(32, padding=4), 
+                                             transforms.RandomHorizontalFlip(), 
+                                             transforms.ToTensor(),
+                                             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261))])
 
-    training_dataset = datasets.CIFAR10('./data', train=True, download=True, transform=transforms)
+    training_dataset = datasets.CIFAR10('./data', train=True, download=True, transform=training_transform)
     training_loader = torch.utils.data.DataLoader(training_dataset, batch_size=args.batch_size, shuffle=True)
 
-    validation_dataset = datasets.CIFAR10('./data', train=False, transform=transforms)
+    validation_transform = transforms.Compose([transforms.ToTensor(),
+                                               transforms.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261))])
+
+    validation_dataset = datasets.CIFAR10('./data', train=False, transform=validation_transform)
     validation_loader = torch.utils.data.DataLoader(validation_dataset, batch_size=args.batch_size, shuffle=True)
 
     # Save the lengths of the data loaders for Tensorboard
