@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=24
 #SBATCH --mem=0
 #SBATCH --account=def-stanmat-ab
-#SBATCH --time=0-03:59
+#SBATCH --time=1-23:59
 #SBATCH --output=logs/jupyter-%N-%j.out
 #SBATCH --mail-user=<markthomas@dal.ca>
 #SBATCH --mail-type=ALL
